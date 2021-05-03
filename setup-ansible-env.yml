@@ -1,0 +1,23 @@
+# setup-ansible-env.yml
+---
+- name: Setup for the Ansible's Environment
+  hosts: localhost
+  gather_facts: no
+
+  tasks:
+    - name: Add "/ect/ansible/hosts"
+      blockinfile:
+        path: /etc/ansible/hosts
+        block: |
+            [webservers]
+            192.168.0.101
+            [dbservers]
+            192.168.0.102
+    - name: Configure Bashrc
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        line: "{{ item }}"
+      with_items:
+        - "alias ans='ansible'"
+        - "alias anp='ansible-playbook'"
+        - "alias ang='ansible-galaxy'"
