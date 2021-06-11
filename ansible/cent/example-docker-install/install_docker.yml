@@ -15,15 +15,15 @@
     package:
       name: docker-ce
       state: present
-  - name: change privilege of docker.sock
-    become: yes
-    run_once: true
-    file: dest=/var/run/docker.sock mode=666
   - name: starting docker services
     become: yes
     service:
       name: docker
       state: started
+  - name: change privilege of docker.sock
+    become: yes
+    run_once: true
+    file: dest=/var/run/docker.sock mode=666
   - name: docker compose install
     run_once: true
     become: yes
