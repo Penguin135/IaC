@@ -1,0 +1,38 @@
+---
+- name: docker setup
+  hosts: clients
+  gather_facts: no
+  tasks:
+  - name: Wait for system to become reachable
+    wait_for_connection:
+      timeout: 300
+  - name: creating a docker repository
+    become: yes
+    yum_repository:
+      description: repo for docker
+      name: docker-ce
+      baseurl: https://download.docker.com/linux/centos/7/x86_64/stable/
+      gpgcheck: no
+  - name: installing docker
+    become: yes
+    package:
+      name: docker-ce
+      state: present
+  - name: starting docker services
+    become: yes
+    service:
+      name: docker
+      state: started
+  - name: change privilege of docker.sock
+    become: yes
+    run_once: true
+    file: dest=/var/run/docker.sock mode=666
+  - name: docker compose install
+    run_once: true
+    become: yes
+    shell: curl -L "https://github.com/docker/compose/releases/download/1.25.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+  - name: docker compose privilege change
+    become: yes
+    run_once: true
+    file: dest=/usr/local/bin/docker-compose mode=+x
