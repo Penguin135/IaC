@@ -1,0 +1,33 @@
+---
+- name: install  docker on client
+  hosts: clients
+  become: yes
+
+  tasks:
+  - name: install python
+    run_once: true
+    action: apt name=python3-pip state=present
+
+  - name: install docker
+    run_once: true
+    shell: curl https://get.docker.com | sh
+
+  - name: modify privilege
+    run_once: true
+    become: no
+    shell: usermod -aG docker $USER
+
+  - name: change privilege of docker
+    run_once: true
+    file: dest=/usr/bin/docker mode=+x
+
+  - name: change privilege of docker.sock
+    run_once: true
+    file: dest=/var/run/docker.sock mode=666
+
+  - name: python docker / docker-compose module
+    run_once: true
+    pip:
+      name:
+      - docker
+      - docker-compose
