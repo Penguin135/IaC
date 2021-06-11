@@ -4,6 +4,9 @@
   become: yes
 
   tasks:
+  - name: update apt repo and cache
+    apt: update_cache=yes force_apt_get=yes
+
   - name: install python
     run_once: true
     action: apt name=python3-pip state=present
@@ -14,8 +17,7 @@
 
   - name: modify privilege
     run_once: true
-    become: no
-    shell: usermod -aG docker $USER
+    shell: usermod -aG docker vagrant
 
   - name: change privilege of docker
     run_once: true
