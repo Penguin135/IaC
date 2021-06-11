@@ -1,0 +1,26 @@
+Vagrant.configure("2") do |config|
+    #ansible-client001
+    config.vm.define "ansible-client001" do |cfg|
+        cfg.vm.box = "ubuntu/bionic64"
+        cfg.vm.provider "virtualbox" do |vb|
+            vb.name = "ansible-client001"
+            vb.cpus = 2
+            vb.memory = 2048
+        end
+        cfg.vm.host_name = "ansible-client001"
+        cfg.vm.network "private_network", ip: "192.168.56.101", :adapter => 2
+    end
+
+    #ansible-server
+    config.vm.define "ansible-server" do |cfg|
+        cfg.vm.box = "ubuntu/bionic64"
+        cfg.vm.provider "virtualbox" do |vb|
+            vb.name = "ansible-server"
+            vb.cpus = 2
+            vb.memory = 2048
+        end
+        cfg.vm.host_name = "ansible-server"
+        cfg.vm.network "private_network", ip: "192.168.56.100", :adapter => 2
+        cfg.vm.provision "shell", inline: "apt install -y software-properties-common && apt-add-repository ppa:ansible/ansible && apt update -y && apt install -y ansible"
+    end
+end

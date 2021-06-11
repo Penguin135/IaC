@@ -1,0 +1,12 @@
+---
+- name: install nginx on the client
+  hosts: clients
+  become: yes
+
+  tasks:
+  - name: update apt repo and cache
+    apt: update_cache=yes force_apt_get=yes
+  - name: install nginx
+    action: apt name=nginx state=present
+  - name: start nginx
+    service: name=nginx state=started

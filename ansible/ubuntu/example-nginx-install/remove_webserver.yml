@@ -1,0 +1,12 @@
+---
+- name: remove nginx on the client
+  hosts: clients
+  become: yes
+
+  tasks:
+  - name: stop nginx
+    service:
+      name: nginx
+      state: stopped
+  - name: remove  nginx
+    apt: name=nginx state=absent autoremove=yes purge=yes
