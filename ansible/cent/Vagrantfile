@@ -1,0 +1,26 @@
+Vagrant.configure("2") do |config|
+    #ansible-client001
+    config.vm.define "ansible-client001" do |cfg|
+        cfg.vm.box = "centos/7"
+        cfg.vm.provider "virtualbox" do |vb|
+            vb.name = "ansible-client001"
+            vb.cpus = 2
+            vb.memory = 2048
+        end
+        cfg.vm.host_name = "ansible-client001"
+        cfg.vm.network "private_network", ip: "192.168.56.101", :adapter => 2
+    end
+
+    #ansible-server
+    config.vm.define "ansible-server" do |cfg|
+        cfg.vm.box = "centos/7"
+        cfg.vm.provider "virtualbox" do |vb|
+            vb.name = "ansible-server"
+            vb.cpus = 2
+            vb.memory = 2048
+        end
+        cfg.vm.host_name = "ansible-server"
+        cfg.vm.network "private_network", ip: "192.168.56.100", :adapter => 2
+        cfg.vm.provision "shell", inline: "yum install -y epel-release && yum install -y ansible -y"
+    end
+end
