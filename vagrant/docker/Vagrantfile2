@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|
+    #server
+    config.vm.define "server" do |cfg|
+        cfg.vm.box = "centos/7"
+        cfg.vm.provider "virtualbox" do |vb|
+            vb.name = "server"
+            vb.cpus = 1
+            vb.memory = 2048
+        end
+        cfg.vm.host_name = "server"
+        cfg.vm.network "private_network", ip: "192.168.56.100", :adapter => 2
+        cfg.vm.provision "shell", inline: "yum install -y yum-utils && yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+        cfg.vm.provision "shell", inline: "yum install -y docker-ce-20.10.5 docker-ce-cli-20.10.5 containerd.io"
+        cfg.vm.provision "shell", inline: "usermod -aG docker vagrant"
+        cfg.vm.provision "shell", inline: "systemctl start docker"
+        cfg.vm.provision "shell", inline: "systemctl enable docker"
+    end
+end
